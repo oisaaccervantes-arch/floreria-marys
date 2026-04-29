@@ -47,21 +47,25 @@
         <div class="container">
             <h2 class="section-title">Nuestro Catálogo</h2>
             
-            <div class="filter-container">
-                <button class="filter-btn active" data-filter="all">Todos</button>
-                <button class="filter-btn" data-filter="arreglos de rosas">Arreglos de rosas</button>
-                <button class="filter-btn" data-filter="buquet de rosas">Buquet de rosas</button>
-                <button class="filter-btn" data-filter="arreglos variados">Arreglos variados</button>
-                <button class="filter-btn" data-filter="buquet variados">Buquet variados</button>
-                <button class="filter-btn" data-filter="graduacion">Graduación</button>
-                <button class="filter-btn" data-filter="peluches">Peluches</button>
-                <button class="filter-btn" data-filter="regalos">Regalos</button>
-                <button class="filter-btn" data-filter="globos">Globos</button>
-                <button class="filter-btn" data-filter="promocion">Promoción del mes</button>
-                <button class="filter-btn" data-filter="amor">Día del Amor</button>
-                <button class="filter-btn" data-filter="madres">Día de las madres</button>
-                <button class="filter-btn" data-filter="difuntos">Difuntos</button>
-                <button class="filter-btn" data-filter="amarillas">Flores amarillas</button>
+            <div class="filter-wrapper">
+                <button class="filter-arrow left-arrow" id="filter-left" aria-label="Desplazar a la izquierda"><i class="ph ph-caret-left"></i></button>
+                <div class="filter-container" id="filter-container">
+                    <button class="filter-btn active" data-filter="all">Todos</button>
+                    <button class="filter-btn" data-filter="arreglos de rosas">Arreglos de rosas</button>
+                    <button class="filter-btn" data-filter="buquet de rosas">Buquet de rosas</button>
+                    <button class="filter-btn" data-filter="arreglos variados">Arreglos variados</button>
+                    <button class="filter-btn" data-filter="buquet variados">Buquet variados</button>
+                    <button class="filter-btn" data-filter="graduacion">Graduación</button>
+                    <button class="filter-btn" data-filter="peluches">Peluches</button>
+                    <button class="filter-btn" data-filter="regalos">Regalos</button>
+                    <button class="filter-btn" data-filter="globos">Globos</button>
+                    <button class="filter-btn" data-filter="promocion">Promoción del mes</button>
+                    <button class="filter-btn" data-filter="amor">Día del Amor</button>
+                    <button class="filter-btn" data-filter="madres">Día de las madres</button>
+                    <button class="filter-btn" data-filter="difuntos">Difuntos</button>
+                    <button class="filter-btn" data-filter="amarillas">Flores amarillas</button>
+                </div>
+                <button class="filter-arrow right-arrow" id="filter-right" aria-label="Desplazar a la derecha"><i class="ph ph-caret-right"></i></button>
             </div>
 
             <div id="catalog-status" class="catalog-status">Cargando productos...</div>
