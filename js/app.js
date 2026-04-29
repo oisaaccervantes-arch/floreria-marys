@@ -1,9 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
-    
+
     // --- 1. CONFIGURACIÓN Y CATÁLOGO DINÁMICO ---
     const grid = document.getElementById('products-grid');
     const statusText = document.getElementById('catalog-status');
-    const filterBtns = document.querySelectorAll('.filter-btn');
     let allProducts = [];
 
     // Fallback Dummy Data en caso de no tener ID de Sheet de producción
@@ -107,6 +106,34 @@ document.addEventListener('DOMContentLoaded', () => {
             grid.appendChild(card);
         });
     }
+
+    // --- DROPDOWN DE CATEGORÍAS ---
+    const categoryDropdown = document.getElementById('category-dropdown');
+    const dropdownToggle = document.getElementById('dropdown-toggle');
+    const dropdownLabel = document.getElementById('dropdown-label');
+    const dropdownItems = document.querySelectorAll('.dropdown-item');
+
+    dropdownToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        categoryDropdown.classList.toggle('open');
+    });
+
+    dropdownItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdownItems.forEach(i => i.classList.remove('active'));
+            item.classList.add('active');
+            const filter = item.dataset.filter;
+            dropdownLabel.textContent = filter === 'all' ? 'Todas las categorías' : item.textContent;
+            categoryDropdown.classList.remove('open');
+            const filtered = filter === 'all' ? allProducts : allProducts.filter(p => p.categoria.toLowerCase().trim() === filter);
+            renderProducts(filtered);
+        });
+    });
+
+    document.addEventListener('click', () => {
+        categoryDropdown.classList.remove('open');
+    });
 
     // --- LÓGICA DEL CARRITO ---
     const cartBadge = document.getElementById("cart-badge");
@@ -247,21 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Inicializar UI del carrito al cargar
     updateCartUI();
 
-    // Filtrado
-    filterBtns.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            filterBtns.forEach(b => b.classList.remove('active'));
-            e.target.classList.add('active');
-            
-            const filter = e.target.getAttribute('data-filter');
-            if (filter === 'all') {
-                renderProducts(allProducts);
-            } else {
-                const filtered = allProducts.filter(p => p.categoria && p.categoria.toLowerCase().includes(filter));
-                renderProducts(filtered);
-            }
-        });
-    });
+
 
     loadProducts();
 

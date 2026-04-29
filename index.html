@@ -47,25 +47,27 @@
         <div class="container">
             <h2 class="section-title">Nuestro Catálogo</h2>
             
-            <div class="filter-wrapper">
-                <button class="filter-arrow left-arrow" id="filter-left" aria-label="Desplazar a la izquierda"><i class="ph ph-caret-left"></i></button>
-                <div class="filter-container" id="filter-container">
-                    <button class="filter-btn active" data-filter="all">Todos</button>
-                    <button class="filter-btn" data-filter="arreglos de rosas">Arreglos de rosas</button>
-                    <button class="filter-btn" data-filter="buquet de rosas">Buquet de rosas</button>
-                    <button class="filter-btn" data-filter="arreglos variados">Arreglos variados</button>
-                    <button class="filter-btn" data-filter="buquet variados">Buquet variados</button>
-                    <button class="filter-btn" data-filter="graduacion">Graduación</button>
-                    <button class="filter-btn" data-filter="peluches">Peluches</button>
-                    <button class="filter-btn" data-filter="regalos">Regalos</button>
-                    <button class="filter-btn" data-filter="globos">Globos</button>
-                    <button class="filter-btn" data-filter="promocion">Promoción del mes</button>
-                    <button class="filter-btn" data-filter="amor">Día del Amor</button>
-                    <button class="filter-btn" data-filter="madres">Día de las madres</button>
-                    <button class="filter-btn" data-filter="difuntos">Difuntos</button>
-                    <button class="filter-btn" data-filter="amarillas">Flores amarillas</button>
-                </div>
-                <button class="filter-arrow right-arrow" id="filter-right" aria-label="Desplazar a la derecha"><i class="ph ph-caret-right"></i></button>
+            <div class="category-dropdown" id="category-dropdown">
+              <button class="dropdown-toggle" id="dropdown-toggle">
+                <span id="dropdown-label">Todas las categorías</span>
+                <i class="ph ph-caret-down"></i>
+              </button>
+              <div class="dropdown-menu" id="dropdown-menu">
+                <div class="dropdown-item active" data-filter="all">Todos</div>
+                <div class="dropdown-item" data-filter="arreglos de rosas">Arreglos de rosas</div>
+                <div class="dropdown-item" data-filter="buquet de rosas">Buquet de rosas</div>
+                <div class="dropdown-item" data-filter="arreglos variados">Arreglos variados</div>
+                <div class="dropdown-item" data-filter="buquet variados">Buquet variados</div>
+                <div class="dropdown-item" data-filter="graduacion">Graduación</div>
+                <div class="dropdown-item" data-filter="peluches">Peluches</div>
+                <div class="dropdown-item" data-filter="regalos">Regalos</div>
+                <div class="dropdown-item" data-filter="globos">Globos</div>
+                <div class="dropdown-item" data-filter="promocion">Promoción del mes</div>
+                <div class="dropdown-item" data-filter="amor">Día del Amor</div>
+                <div class="dropdown-item" data-filter="madres">Día de las Madres</div>
+                <div class="dropdown-item" data-filter="difuntos">Difuntos</div>
+                <div class="dropdown-item" data-filter="amarillas">Flores amarillas</div>
+              </div>
             </div>
 
             <div id="catalog-status" class="catalog-status">Cargando productos...</div>
