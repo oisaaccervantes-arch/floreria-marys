@@ -150,12 +150,6 @@
                             <label for="whatsapp">WhatsApp</label>
                             <input type="tel" id="whatsapp" name="whatsapp" required placeholder="Tu número para confirmación">
                         </div>
-                        <div class="form-group" id="form-cart-summary">
-                            <label>Tu Pedido</label>
-                            <div class="cart-summary-box" id="cart-summary-box">
-                                <!-- Cart contents will be generated here -->
-                            </div>
-                        </div>
                         <div class="form-group">
                             <label>Fecha de Entrega</label>
                             <div style="display:flex; gap: 10px; align-items: center;">
@@ -195,10 +189,18 @@
                                 <select id="tipo_domicilio" name="tipo_domicilio">
                                     <option value="Casa" selected>Casa</option>
                                     <option value="Departamento">Departamento</option>
-                                    <option value="Negocio">Institución</option>
+                                    <option value="Institución">Institución</option>
                                     <option value="Negocio">Negocio</option>
                                     <option value="Otro">Otro</option>
                                 </select>
+                            </div>
+                            <div class="form-group" id="grupo_nombre_institucion" style="display: none;">
+                                <label for="nombre_institucion">Nombre de la institución</label>
+                                <input type="text" id="nombre_institucion" name="nombre_institucion" placeholder="Ej. Hospital General, Escuela Juárez...">
+                            </div>
+                            <div class="form-group" id="grupo_nombre_negocio" style="display: none;">
+                                <label for="nombre_negocio">Nombre del negocio</label>
+                                <input type="text" id="nombre_negocio" name="nombre_negocio" placeholder="Ej. Restaurante El Mesón, Farmacia Cruz...">
                             </div>
                             <div class="form-group" style="margin-bottom: 0;">
                                 <label for="referencias">Referencias</label>

@@ -19,16 +19,16 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const url = "https://docs.google.com/spreadsheets/d/11N4iTwNsoNL5yS_wJGPIkq7-uLTnkSYet7q664_q_po/gviz/tq?tqx=out:json";
             const response = await fetch(url);
-            
+
             if (!response.ok) throw new Error("Fallo la conexión");
-            
+
             const text = await response.text();
-            
+
             // Quitar el prefijo google.visualization.Query.setResponse( y el sufijo )
             // Extraemos desde la primera llave hasta la última llave para asegurar JSON válido
             const jsonString = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
             const data = JSON.parse(jsonString);
-            
+
             allProducts = parseJSONData(data);
             renderProducts(allProducts);
         } catch (error) {
@@ -38,6 +38,17 @@ document.addEventListener('DOMContentLoaded', () => {
             allProducts = dummyData;
             renderProducts(allProducts);
         }
+    }
+
+    function formatPrice(val) {
+        if (!val) return "$0";
+        let strVal = String(val).trim();
+        let numParsed = parseFloat(strVal.replace(/[^0-9.-]+/g, ""));
+        if (isNaN(numParsed)) return strVal.startsWith('$') ? strVal : '$' + strVal;
+        
+        // Formatear a MXN
+        let formatted = '$' + numParsed.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        return formatted.endsWith('.00') ? formatted.slice(0, -3) : formatted;
     }
 
     function parseJSONData(data) {
@@ -65,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 result.push(obj);
             }
         });
-        
+
         return result;
     }
 
@@ -73,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
         grid.innerHTML = "";
         statusText.style.display = "none";
 
-        if(products.length === 0) {
+        if (products.length === 0) {
             statusText.style.display = "block";
             statusText.textContent = "No hay productos disponibles por ahora.";
             return;
@@ -84,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const title = p.nombre || "Arreglo Floral";
             const cat = p.categoria || "N/A";
             const desc = p.descripcion || "";
-            const price = p.precio || "$0.00";
+            const price = formatPrice(p.precio || "0");
             const imgUrl = p.imagen_url || "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?w=500";
 
             const card = document.createElement("div");
@@ -139,30 +150,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const cartBadge = document.getElementById("cart-badge");
     const cartItemsContainer = document.getElementById("cart-items");
     const cartSubtotalPrice = document.getElementById("cart-subtotal-price");
-    
+
     let cart = JSON.parse(localStorage.getItem('floreria_cart') || '[]');
 
     function updateCartUI() {
         const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
         cartBadge.textContent = totalItems;
-        
+
         cartItemsContainer.innerHTML = '';
         let subtotal = 0;
-        
+
         if (cart.length === 0) {
             cartItemsContainer.innerHTML = '<p style="text-align:center; color: var(--text-muted); margin-top: 2rem;">Tu carrito está vacío.</p>';
         } else {
             cart.forEach((item, index) => {
-                const priceNum = parseFloat(item.precio.replace(/[^0-9.-]+/g,"")) || 0;
+                const priceNum = parseFloat(item.precio.replace(/[^0-9.-]+/g, "")) || 0;
                 subtotal += priceNum * item.qty;
-                
+
                 const cartItem = document.createElement("div");
                 cartItem.className = "cart-item";
                 cartItem.innerHTML = `
                     <img src="${item.imagen_url}" alt="${item.nombre}" class="cart-item-img">
                     <div class="cart-item-info">
                         <div class="cart-item-title">${item.nombre}</div>
-                        <div class="cart-item-price">${item.precio}</div>
+                        <div class="cart-item-price">${formatPrice(item.precio)}</div>
                         <div class="cart-item-actions">
                             <button class="qty-btn" type="button" onclick="updateQty(${index}, -1)">-</button>
                             <span class="qty-display">${item.qty}</span>
@@ -174,67 +185,43 @@ document.addEventListener('DOMContentLoaded', () => {
                 cartItemsContainer.appendChild(cartItem);
             });
         }
-        
-        cartSubtotalPrice.textContent = '$' + subtotal.toFixed(2);
-        
-        // Actualizar el resumen en el formulario
-        const formSummaryBox = document.getElementById("cart-summary-box");
-        if (formSummaryBox) {
-            if (cart.length === 0) {
-                formSummaryBox.innerHTML = '<div class="cart-summary-empty">Tu pedido está vacío. Por favor selecciona productos del catálogo arriba.</div>';
-            } else {
-                let summaryHTML = '';
-                cart.forEach((item) => {
-                    const priceNum = parseFloat(item.precio.replace(/[^0-9.-]+/g,"")) || 0;
-                    summaryHTML += `
-                        <div class="cart-summary-item">
-                            <span>${item.qty}x ${item.nombre}</span>
-                            <span>$${(priceNum * item.qty).toFixed(2)}</span>
-                        </div>
-                    `;
-                });
-                summaryHTML += `
-                    <div class="cart-summary-total">
-                        <span>Total de tu Compra:</span>
-                        <span>$${subtotal.toFixed(2)}</span>
-                    </div>
-                `;
-                formSummaryBox.innerHTML = summaryHTML;
-            }
-        }
+
+        cartSubtotalPrice.textContent = formatPrice(subtotal);
     }
-    
-    window.updateQty = function(index, change) {
+
+ 
+
+    window.updateQty = function (index, change) {
         cart[index].qty += change;
         if (cart[index].qty <= 0) {
             cart.splice(index, 1);
         }
         saveCart();
     };
-    
-    window.removeFromCart = function(index) {
+
+    window.removeFromCart = function (index) {
         cart.splice(index, 1);
         saveCart();
     };
-    
+
     function saveCart() {
         localStorage.setItem('floreria_cart', JSON.stringify(cart));
         updateCartUI();
     }
-    
-    window.addToCart = function(productName, btnElement) {
+
+    window.addToCart = function (productName, btnElement) {
         const product = allProducts.find(p => (p.nombre || "Arreglo Floral") === productName);
         if (!product) return;
-        
+
         const existingItem = cart.find(item => item.nombre === product.nombre);
         if (existingItem) {
             existingItem.qty += 1;
         } else {
             cart.push({ ...product, qty: 1 });
         }
-        
+
         saveCart();
-        
+
         // Animación de confirmación
         const originalText = btnElement.innerHTML;
         btnElement.classList.add('added');
@@ -244,33 +231,33 @@ document.addEventListener('DOMContentLoaded', () => {
             btnElement.innerHTML = originalText;
         }, 1500);
     }
-    
+
     // Controles del Sidebar del Carrito
     const cartSidebar = document.getElementById("cart-sidebar");
     const cartOverlay = document.getElementById("cart-overlay");
     const navCart = document.getElementById("nav-cart");
     const closeCartBtn = document.getElementById("close-cart");
     const proceedOrderBtn = document.getElementById("proceed-order-btn");
-    
+
     function openCart() {
         cartSidebar.classList.add("open");
         cartOverlay.classList.add("active");
     }
-    
+
     function closeCart() {
         cartSidebar.classList.remove("open");
         cartOverlay.classList.remove("active");
     }
-    
+
     navCart.addEventListener("click", openCart);
-    if(closeCartBtn) closeCartBtn.addEventListener("click", closeCart);
+    if (closeCartBtn) closeCartBtn.addEventListener("click", closeCart);
     cartOverlay.addEventListener("click", closeCart);
-    
+
     proceedOrderBtn.addEventListener("click", () => {
         closeCart();
         document.getElementById("pedido").scrollIntoView({ behavior: 'smooth' });
     });
-    
+
     // Inicializar UI del carrito al cargar
     updateCartUI();
 
@@ -297,6 +284,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
         inpMes.addEventListener('input', (e) => {
             e.target.value = e.target.value.replace(/[^0-9]/g, '');
+        });
+    }
+
+    // --- FORMATO AUTOMÁTICO TELÉFONO ---
+    const inpWhatsapp = document.getElementById('whatsapp');
+    if (inpWhatsapp) {
+        inpWhatsapp.addEventListener('input', (e) => {
+            let digits = e.target.value.replace(/\D/g, '').slice(0, 10);
+            let formatted = '';
+            if (digits.length <= 3) {
+                formatted = digits.length ? '(' + digits : '';
+            } else if (digits.length <= 6) {
+                formatted = '(' + digits.slice(0,3) + ') ' + digits.slice(3);
+            } else {
+                formatted = '(' + digits.slice(0,3) + ') ' + digits.slice(3,6) + ' ' + digits.slice(6);
+            }
+            e.target.value = formatted;
         });
     }
 
@@ -346,41 +350,73 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    const tipoDomicilioSelect = document.getElementById("tipo_domicilio");
+    const grupoNombreInstitucion = document.getElementById("grupo_nombre_institucion");
+    const inputNombreInstitucion = document.getElementById("nombre_institucion");
+    const grupoNombreNegocio = document.getElementById("grupo_nombre_negocio");
+    const inputNombreNegocio = document.getElementById("nombre_negocio");
+
+    if (tipoDomicilioSelect) {
+        tipoDomicilioSelect.addEventListener("change", (e) => {
+            const val = e.target.value;
+            if (grupoNombreInstitucion && inputNombreInstitucion) {
+                if (val === "Institución") {
+                    grupoNombreInstitucion.style.display = "block";
+                    inputNombreInstitucion.setAttribute("required", "required");
+                } else {
+                    grupoNombreInstitucion.style.display = "none";
+                    inputNombreInstitucion.removeAttribute("required");
+                    inputNombreInstitucion.value = "";
+                }
+            }
+            if (grupoNombreNegocio && inputNombreNegocio) {
+                if (val === "Negocio") {
+                    grupoNombreNegocio.style.display = "block";
+                    inputNombreNegocio.setAttribute("required", "required");
+                } else {
+                    grupoNombreNegocio.style.display = "none";
+                    inputNombreNegocio.removeAttribute("required");
+                    inputNombreNegocio.value = "";
+                }
+            }
+        });
+    }
+
     orderForm.addEventListener("submit", async (e) => {
         e.preventDefault();
-        
+
         // Block submit if cart is empty
         if (cart.length === 0) {
             alert("No tienes productos en el carrito. Agrega algo del catálogo primero.");
             return;
         }
-        
+
         const btnSubmit = document.getElementById("submit-btn");
         btnSubmit.textContent = "Enviando...";
         btnSubmit.disabled = true;
 
         const formData = new FormData(orderForm);
         const data = Object.fromEntries(formData.entries());
-        
+
         // Calcular año automáticamente basado en el día y el mes
         if (data.fecha_dia && data.fecha_mes) {
             const d = parseInt(data.fecha_dia, 10);
             const m = parseInt(data.fecha_mes, 10) - 1;
             let year = new Date().getFullYear();
-            
+
             if (!isNaN(d) && !isNaN(m)) {
                 const now = new Date();
                 const targetDate = new Date(year, m, d);
-                now.setHours(0,0,0,0);
+                now.setHours(0, 0, 0, 0);
                 if (targetDate < now) {
                     year++;
                 }
             }
-            
+
             const paddedDay = String(data.fecha_dia).padStart(2, '0');
             const paddedMonth = String(data.fecha_mes).padStart(2, '0');
             data.fecha = `${paddedDay}/${paddedMonth}/${year}`;
-            
+
             // Limpiar los valores sueltos del payload
             delete data.fecha_dia;
             delete data.fecha_mes;
@@ -392,13 +428,15 @@ document.addEventListener('DOMContentLoaded', () => {
             delete data.colonia;
             delete data.calle_numero;
             delete data.tipo_domicilio;
+            delete data.nombre_institucion;
+            delete data.nombre_negocio;
             delete data.referencias;
         }
 
         // Agregar los productos del carrito al payload y calcular total
         let totalOrden = 0;
         data.productos = cart.map(item => {
-            const pNum = parseFloat(item.precio.replace(/[^0-9.-]+/g,"")) || 0;
+            const pNum = parseFloat(item.precio.replace(/[^0-9.-]+/g, "")) || 0;
             totalOrden += pNum * item.qty;
             return {
                 nombre: item.nombre,
@@ -411,26 +449,32 @@ document.addEventListener('DOMContentLoaded', () => {
         // Generar resumen para el mensaje de WhatsApp que configurarán en el webhook
         const metodoTxt = data.metodo_entrega === "domicilio" ? "Envío a Domicilio" : "Recoger en Tienda";
         let resumen = `*RESUMEN DE TU PEDIDO*\n`;
-        
+
         resumen += `• PRODUCTOS:\n`;
         cart.forEach(item => {
             resumen += `  - ${item.qty}x ${item.nombre} (${item.precio})\n`;
         });
         resumen += `  *Total:* $${totalOrden.toFixed(2)}\n`;
-        
+
         resumen += `• Fecha: ${data.fecha}\n`;
         resumen += `• Modalidad: ${metodoTxt}\n`;
         if (data.metodo_entrega === "domicilio") {
             resumen += `  - Ciudad: ${data.ciudad}\n`;
             resumen += `  - Colonia: ${data.colonia}\n`;
-            resumen += `  - Dirección: ${data.calle_numero} (${data.tipo_domicilio})\n`;
+            let tipoTxt = data.tipo_domicilio;
+            if (data.tipo_domicilio === "Institución" && data.nombre_institucion) {
+                tipoTxt += ` - ${data.nombre_institucion}`;
+            } else if (data.tipo_domicilio === "Negocio" && data.nombre_negocio) {
+                tipoTxt += ` - ${data.nombre_negocio}`;
+            }
+            resumen += `  - Dirección: ${data.calle_numero} (${tipoTxt})\n`;
             if (data.referencias) resumen += `  - Ref: ${data.referencias}\n`;
         }
         if (data.tipo_tarjeta) resumen += `• Tarjeta: ${data.tipo_tarjeta}\n`;
         if (data.mensaje_tarjeta) resumen += `• Mensaje: "${data.mensaje_tarjeta}"\n`;
         if (data.notas) resumen += `• Notas adicionales: ${data.notas}\n`;
         resumen += `\nPara confirmar tu pedido, realiza tu pago en un plazo de 24 horas. Puedes hacerlo por transferencia bancaria, CoDi o en efectivo en nuestra tienda. Una vez confirmado tu pago, comenzaremos a preparar tu arreglo con mucho cariño. Si tienes alguna duda, con gusto te ayudamos. ¡Gracias por elegir Florería Mary's! 🌸`;
-        
+
         data.mensaje_whatsapp = resumen;
 
         console.log("Datos del pedido:", data); // Confirmar payload
@@ -475,8 +519,8 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     // Variable para pruebas. En la consola puedes hacer: simularFecha('2026-05-11T12:00:00')
-    let testDateOverride = null; 
-    window.simularFecha = function(fechaStr) {
+    let testDateOverride = null;
+    window.simularFecha = function (fechaStr) {
         testDateOverride = fechaStr ? new Date(fechaStr) : null;
         console.log("Fecha simulada:", testDateOverride || "Tiempo Real");
         updateCountdown();
@@ -504,9 +548,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 eventDate = new Date(currentYear + 1, ev.month, ev.day, 0, 0, 0, 0);
                 eventEnd = new Date(currentYear + 1, ev.month, ev.day, 23, 59, 59, 999);
             }
-            
+
             const diffToEnd = eventEnd.getTime() - now.getTime();
-            
+
             if (diffToEnd > 0 && diffToEnd < minDiff) {
                 minDiff = diffToEnd;
                 nextEvent = ev.name;
@@ -523,7 +567,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const now = getNow().getTime();
         let distance = nextEv.date.getTime() - now;
-        
+
         const titleEl = document.getElementById("next-event-name");
 
         if (distance <= 0) {
@@ -557,7 +601,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         updateCountdown();
     }, 1000);
-    
+
     updateCountdown();
 
 });
