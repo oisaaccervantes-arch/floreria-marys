@@ -47,28 +47,26 @@
         <div class="container">
             <h2 class="section-title">Nuestro Catálogo</h2>
             
-            <div class="category-dropdown" id="category-dropdown">
-              <button class="dropdown-toggle" id="dropdown-toggle">
-                <span id="dropdown-label">Todas las categorías</span>
-                <i class="ph ph-caret-down"></i>
-              </button>
-              <div class="dropdown-menu" id="dropdown-menu">
-                <div class="dropdown-item active" data-filter="all">Todos</div>
-                <div class="dropdown-item" data-filter="arreglo de rosas">Arreglo de rosas</div>
-                <div class="dropdown-item" data-filter="buquet de rosas">Buquet de rosas</div>
-                <div class="dropdown-item" data-filter="arreglos variados">Arreglos variados</div>
-                <div class="dropdown-item" data-filter="buquet variados">Buquet variados</div>
-                <div class="dropdown-item" data-filter="graduación">Graduación</div>
-                <div class="dropdown-item" data-filter="peluches">Peluches</div>
-                <div class="dropdown-item" data-filter="regalos">Regalos</div>
-                <div class="dropdown-item" data-filter="globos">Globos</div>
-                <div class="dropdown-item" data-filter="promoción del mes">Promoción del mes</div>
-                <div class="dropdown-item" data-filter="día del amor">Día del amor</div>
-                <div class="dropdown-item" data-filter="día de las madres">Día de las madres</div>
-                <div class="dropdown-item" data-filter="difuntos">Difuntos</div>
-                <div class="dropdown-item" data-filter="flores amarillas">Flores amarillas</div>
-              </div>
+            <div class="category-filter-bar">
+                    <div class="dropdown-item active" data-filter="all">Todos</div>
+                    <div class="dropdown-item" data-filter="arreglo de rosas">Arreglo de rosas</div>
+                    <div class="dropdown-item" data-filter="buquet de rosas">Buquet de rosas</div>
+                    <div class="dropdown-item" data-filter="arreglos variados">Arreglos variados</div>
+                    <div class="dropdown-item" data-filter="buquet variados">Buquet variados</div>
+                    <div class="dropdown-item" data-filter="graduación">Graduación</div>
+                    <div class="dropdown-item" data-filter="peluches">Peluches</div>
+                    <div class="dropdown-item" data-filter="regalos">Regalos</div>
+                    <div class="dropdown-item" data-filter="globos">Globos</div>
+                    <div class="dropdown-item" data-filter="promoción del mes">Promoción del mes</div>
+                    <div class="dropdown-item" data-filter="día del amor">Día del amor</div>
+                    <div class="dropdown-item" data-filter="día de las madres">Día de las madres</div>
+                    <div class="dropdown-item" data-filter="difuntos">Difuntos</div>
+                    <div class="dropdown-item" data-filter="flores amarillas">Flores amarillas</div>
             </div>
+            <!-- Elementos ocultos para evitar errores en app.js -->
+            <div id="category-dropdown" style="display:none;"></div>
+            <button id="dropdown-toggle" style="display:none;"></button>
+            <span id="dropdown-label" style="display:none;"></span>
 
             <div id="catalog-status" class="catalog-status">Cargando productos...</div>
             <div class="products-grid" id="products-grid">
@@ -152,11 +150,25 @@
                         </div>
                         <div class="form-group">
                             <label>Fecha de Entrega</label>
-                            <div style="display:flex; gap: 10px; align-items: center;">
-                                <input type="text" id="fecha_dia" name="fecha_dia" required placeholder="DD" maxlength="2" inputmode="numeric" style="width: 70px; text-align: center;">
-                                <span style="font-size: 1.5rem; color: var(--text-muted);">/</span>
-                                <input type="text" id="fecha_mes" name="fecha_mes" required placeholder="MM" maxlength="2" inputmode="numeric" style="width: 70px; text-align: center;">
+                            <div class="custom-date-picker" id="custom-date-picker">
+                                <div class="date-input-bar" id="date-input-bar">
+                                    <i class="ph ph-calendar-blank"></i>
+                                    <span id="date-display-text">Selecciona una fecha...</span>
+                                    <i class="ph ph-caret-down" id="date-caret"></i>
+                                </div>
+                                <div class="date-calendar" id="date-calendar">
+                                    <div class="cal-header">
+                                        <button type="button" class="cal-nav" id="cal-prev"><i class="ph ph-caret-left"></i></button>
+                                        <span class="cal-month-year" id="cal-month-year"></span>
+                                        <button type="button" class="cal-nav" id="cal-next"><i class="ph ph-caret-right"></i></button>
+                                    </div>
+                                    <div class="cal-weekdays">
+                                        <span>Do</span><span>Lu</span><span>Ma</span><span>Mi</span><span>Ju</span><span>Vi</span><span>Sá</span>
+                                    </div>
+                                    <div class="cal-days" id="cal-days"></div>
+                                </div>
                             </div>
+                            <input type="hidden" id="fecha_entrega" name="fecha_entrega">
                         </div>
                         <div class="form-group">
                             <label for="metodo_entrega">Método de Entrega</label>

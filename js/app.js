@@ -5,15 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const statusText = document.getElementById('catalog-status');
     let allProducts = [];
 
-    // Fallback Dummy Data en caso de no tener ID de Sheet de producción
-    const dummyData = [
-        { nombre: "Amor Eterno", categoria: "rosas", descripcion: "Arreglo de 24 rosas rojas premium.", precio: "$850", imagen_url: "https://images.unsplash.com/photo-1550926588-e9f05a964319?w=500", disponible: "SI" },
-        { nombre: "Para Mamá", categoria: "mama", descripcion: "Mix floral con tulipanes y gerberas.", precio: "$600", imagen_url: "https://images.unsplash.com/photo-1520697968583-0498eb982e5b?w=500", disponible: "SI" },
-        { nombre: "Dulzura y Bodas", categoria: "bodas", descripcion: "Elegancia en tonos blancos y pasteles.", precio: "$1200", imagen_url: "https://images.unsplash.com/photo-1543884351-c06dfa996d99?w=500", disponible: "SI" },
-        { nombre: "Aniversario Especial", categoria: "especiales", descripcion: "Exótico arreglo con orquídeas para impresionar.", precio: "$1500", imagen_url: "https://images.unsplash.com/photo-1604167191338-eeae435d64e9?w=500", disponible: "SI" },
-        { nombre: "Rosas Blancas", categoria: "rosas", descripcion: "Arreglo de 12 rosas blancas puras.", precio: "$450", imagen_url: "https://images.unsplash.com/photo-1549491823-1d46bebf5cc8?w=500", disponible: "SI" },
-        { nombre: "Día de la Mamá Feliz", categoria: "mama", descripcion: "Bouquet gigante para sorprenderla.", precio: "$950", imagen_url: "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?w=500", disponible: "SI" }
-    ];
 
     async function loadProducts() {
         try {
@@ -45,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let strVal = String(val).trim();
         let numParsed = parseFloat(strVal.replace(/[^0-9.-]+/g, ""));
         if (isNaN(numParsed)) return strVal.startsWith('$') ? strVal : '$' + strVal;
-        
+
         // Formatear a MXN
         let formatted = '$' + numParsed.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         return formatted.endsWith('.00') ? formatted.slice(0, -3) : formatted;
@@ -189,7 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
         cartSubtotalPrice.textContent = formatPrice(subtotal);
     }
 
- 
+
 
     window.updateQty = function (index, change) {
         cart[index].qty += change;
@@ -263,6 +254,89 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
+    // --- CALENDARIO PERSONALIZADO ---
+    const datePicker = document.getElementById('custom-date-picker');
+    const dateBar = document.getElementById('date-input-bar');
+    const fechaInput = document.getElementById('fecha_entrega');
+    const calDays = document.getElementById('cal-days');
+    const calMonthYear = document.getElementById('cal-month-year');
+    const dateDisplay = document.getElementById('date-display-text');
+
+    if (datePicker && dateBar) {
+        let currentDate = new Date();
+        let selectedDate = null;
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const months = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+
+        function renderCalendar() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            calMonthYear.textContent = `${months[month]} ${year}`;
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            calDays.innerHTML = '';
+
+            for (let i = 0; i < firstDay; i++) {
+                const empty = document.createElement('div');
+                empty.className = 'cal-day empty';
+                calDays.appendChild(empty);
+            }
+
+            for (let d = 1; d <= daysInMonth; d++) {
+                const dayBtn = document.createElement('button');
+                dayBtn.type = 'button';
+                dayBtn.className = 'cal-day';
+                dayBtn.textContent = d;
+                const thisDate = new Date(year, month, d);
+                thisDate.setHours(0, 0, 0, 0);
+                if (thisDate < today) dayBtn.classList.add('disabled');
+                if (thisDate.toDateString() === today.toDateString()) dayBtn.classList.add('today');
+                if (selectedDate && thisDate.toDateString() === selectedDate.toDateString()) dayBtn.classList.add('selected');
+
+                dayBtn.addEventListener('click', () => {
+                    if (thisDate < today) return;
+                    selectedDate = thisDate;
+                    const dd = String(d).padStart(2, '0');
+                    const mm = String(month + 1).padStart(2, '0');
+                    dateDisplay.textContent = `${dd}/${mm}/${year}`;
+                    fechaInput.value = `${dd}/${mm}/${year}`;
+                    dateBar.classList.add('has-date');
+                    datePicker.classList.remove('open');
+                    renderCalendar();
+                });
+                calDays.appendChild(dayBtn);
+            }
+        }
+
+        dateBar.addEventListener('click', (e) => {
+            e.stopPropagation();
+            datePicker.classList.toggle('open');
+            renderCalendar();
+        });
+
+        document.getElementById('cal-prev').addEventListener('click', (e) => {
+            e.stopPropagation();
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            renderCalendar();
+        });
+
+        document.getElementById('cal-next').addEventListener('click', (e) => {
+            e.stopPropagation();
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            renderCalendar();
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!datePicker.contains(e.target)) {
+                datePicker.classList.remove('open');
+            }
+        });
+
+        renderCalendar();
+    }
+
     loadProducts();
 
 
@@ -296,9 +370,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (digits.length <= 3) {
                 formatted = digits.length ? '(' + digits : '';
             } else if (digits.length <= 6) {
-                formatted = '(' + digits.slice(0,3) + ') ' + digits.slice(3);
+                formatted = '(' + digits.slice(0, 3) + ') ' + digits.slice(3);
             } else {
-                formatted = '(' + digits.slice(0,3) + ') ' + digits.slice(3,6) + ' ' + digits.slice(6);
+                formatted = '(' + digits.slice(0, 3) + ') ' + digits.slice(3, 6) + ' ' + digits.slice(6);
             }
             e.target.value = formatted;
         });
