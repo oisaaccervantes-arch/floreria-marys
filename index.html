@@ -47,7 +47,11 @@
         <div class="container">
             <h2 class="section-title">Nuestro Catálogo</h2>
             
-            <div class="category-filter-bar">
+            <div class="category-filter-wrapper">
+                <button class="cat-arrow cat-arrow-left" id="cat-arrow-left" aria-label="Anterior">
+                    <i class="ph ph-caret-left"></i>
+                </button>
+                <div class="category-filter-bar" id="category-filter-bar">
                     <div class="dropdown-item active" data-filter="all">Todos</div>
                     <div class="dropdown-item" data-filter="arreglo de rosas">Arreglo de rosas</div>
                     <div class="dropdown-item" data-filter="buquet de rosas">Buquet de rosas</div>
@@ -62,6 +66,10 @@
                     <div class="dropdown-item" data-filter="día de las madres">Día de las madres</div>
                     <div class="dropdown-item" data-filter="difuntos">Difuntos</div>
                     <div class="dropdown-item" data-filter="flores amarillas">Flores amarillas</div>
+                </div>
+                <button class="cat-arrow cat-arrow-right" id="cat-arrow-right" aria-label="Siguiente">
+                    <i class="ph ph-caret-right"></i>
+                </button>
             </div>
             <!-- Elementos ocultos para evitar errores en app.js -->
             <div id="category-dropdown" style="display:none;"></div>

@@ -337,6 +337,33 @@ document.addEventListener('DOMContentLoaded', () => {
         renderCalendar();
     }
 
+    // --- FLECHAS DE CATEGORÍAS ---
+    const filterBar = document.getElementById('category-filter-bar');
+    const arrowLeft = document.getElementById('cat-arrow-left');
+    const arrowRight = document.getElementById('cat-arrow-right');
+    const filterWrapper = filterBar?.closest('.category-filter-wrapper');
+
+    function updateArrows() {
+        if (!filterBar || !filterWrapper) return;
+        const atStart = filterBar.scrollLeft <= 5;
+        const atEnd = filterBar.scrollLeft + filterBar.clientWidth >= filterBar.scrollWidth - 5;
+        arrowLeft.disabled = atStart;
+        arrowRight.disabled = atEnd;
+        filterWrapper.classList.toggle('hide-left', atStart);
+        filterWrapper.classList.toggle('hide-right', atEnd);
+    }
+
+    if (arrowLeft && arrowRight && filterBar) {
+        arrowLeft.addEventListener('click', () => {
+            filterBar.scrollBy({ left: -200, behavior: 'smooth' });
+        });
+        arrowRight.addEventListener('click', () => {
+            filterBar.scrollBy({ left: 200, behavior: 'smooth' });
+        });
+        filterBar.addEventListener('scroll', updateArrows);
+        updateArrows(); // estado inicial
+    }
+
     loadProducts();
 
 

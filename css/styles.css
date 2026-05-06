@@ -1215,3 +1215,72 @@ a {
 .cal-day.empty {
     cursor: default;
 }
+
+/* Category Filter Wrapper con flechas y fade */
+.category-filter-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.category-filter-wrapper::before,
+.category-filter-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 60px;
+    pointer-events: none;
+    z-index: 2;
+    transition: opacity 0.3s ease;
+}
+
+.category-filter-wrapper::before {
+    left: 44px; /* después del botón izquierdo */
+    background: linear-gradient(to right, white, transparent);
+}
+
+.category-filter-wrapper::after {
+    right: 44px; /* antes del botón derecho */
+    background: linear-gradient(to left, white, transparent);
+}
+
+.category-filter-wrapper.hide-left::before { opacity: 0; }
+.category-filter-wrapper.hide-right::after { opacity: 0; }
+
+.cat-arrow {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border-color);
+    background: white;
+    color: var(--primary);
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    z-index: 3;
+}
+
+.cat-arrow:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.cat-arrow:disabled {
+    opacity: 0.3;
+    cursor: default;
+    pointer-events: none;
+}
+
+/* Quitar el margin-bottom del bar original ya que lo maneja el wrapper */
+.category-filter-bar {
+    margin-bottom: 0 !important;
+}
