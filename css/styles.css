@@ -1284,3 +1284,23 @@ a {
 .category-filter-bar {
     margin-bottom: 0 !important;
 }
+
+.category-filter-bar .dropdown-item[data-filter="promoción del mes"] {
+    background: #fff8e1;
+    border: 1.5px solid #f59e0b;
+    color: #92400e;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.category-filter-bar .dropdown-item[data-filter="promoción del mes"]::before {
+    content: 'HOY';
+    background: var(--primary);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+}
