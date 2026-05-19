@@ -581,7 +581,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("Datos del pedido:", data); // Confirmar payload
 
         try {
-            const response = await fetch('https://primary-production-65b33.up.railway.app/webhook-test/floreria', {
+            const response = await fetch(CONFIG.WEBHOOK_URL, {
                 method: "POST",
                 mode: "no-cors",
                 headers: {
