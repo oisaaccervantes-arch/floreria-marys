@@ -417,81 +417,69 @@ a {
 }
 
 
-/* Fechas Importantes */
-.countdown-container {
-    background: white;
-    border-radius: 20px;
-    padding: 3rem;
-    text-align: center;
-    box-shadow: var(--shadow-soft);
-    margin-bottom: 3rem;
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
-    border: 1px solid var(--border-color);
-}
-
-.next-event {
-    font-size: 1.5rem;
-    color: var(--primary);
-    font-weight: 600;
-    margin-bottom: 1.5rem;
-}
-
-.timer {
-    display: flex;
+/* Ocasión Especial Countdown */
+.occasion-countdown {
+    display: inline-flex;
     justify-content: center;
-    gap: 1.5rem;
-    flex-wrap: wrap;
-}
-
-.time-block {
-    display: flex;
-    flex-direction: column;
     align-items: center;
+    gap: 1.25rem;
+    margin-top: 1.2rem;
+    padding: 0.6rem 1.8rem;
+    background: rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 50px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+    transition: var(--transition);
 }
 
-.time-block span {
-    font-size: 3rem;
+.occasion-countdown:hover {
+    background: rgba(255, 255, 255, 0.6);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
+}
+
+.countdown-item {
+    display: flex;
+    align-items: baseline;
+    gap: 0.2rem;
+}
+
+.countdown-num {
     font-family: var(--font-heading);
-    color: var(--secondary);
+    font-size: 1.6rem;
     font-weight: 700;
-    background: var(--bg-light);
-    width: 80px;
-    height: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 12px;
-    margin-bottom: 0.5rem;
-    border: 1px solid var(--border-color);
+    color: var(--secondary);
 }
 
-.time-block label {
-    font-size: 0.85rem;
+.countdown-lbl {
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 500;
     color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    text-transform: lowercase;
 }
 
-.event-list {
-    display: flex;
-    justify-content: center;
-    gap: 3rem;
-    flex-wrap: wrap;
-}
-
-.event-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-    color: var(--text-muted);
-}
-
-.event-item i {
-    font-size: 2rem;
+.countdown-finished {
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    font-weight: 600;
     color: var(--primary);
+    letter-spacing: 0.5px;
+}
+
+@media (max-width: 576px) {
+    .occasion-countdown {
+        gap: 0.8rem;
+        padding: 0.5rem 1.2rem;
+    }
+    .countdown-num {
+        font-size: 1.3rem;
+    }
+    .countdown-lbl {
+        font-size: 0.75rem;
+    }
 }
 
 
@@ -1038,19 +1026,7 @@ a {
         font-size: 2rem;
     }
 
-    .timer {
-        gap: 0.5rem;
-    }
 
-    .time-block span {
-        width: 60px;
-        height: 60px;
-        font-size: 2rem;
-    }
-
-    .countdown-container {
-        padding: 1.5rem;
-    }
 }
 
 /* Custom Date Picker */
@@ -1303,4 +1279,196 @@ a {
     padding: 2px 6px;
     border-radius: 20px;
     letter-spacing: 0.5px;
+}
+
+/* ==========================================
+   NUEVA SECCIÓN DE OCASIONES DINÁMICAS (CAROUSEL)
+   ========================================== */
+
+.occasion-section {
+    position: relative;
+    overflow: hidden;
+    transition: background-color 0.8s ease-in-out;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.relative-container {
+    position: relative;
+    z-index: 5;
+}
+
+/* Badge de Ocasión Premium */
+.occasion-badge {
+    display: inline-block;
+    padding: 0.5rem 1.2rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    border-radius: 50px;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    color: var(--secondary);
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Encabezado */
+.occasion-header {
+    text-align: center;
+    margin-bottom: 3.5rem;
+}
+
+.occasion-title {
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+}
+
+.occasion-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-weight: 400;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Decoraciones Flotantes */
+.occasion-deco {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.floating-decor {
+    position: absolute;
+    user-select: none;
+    opacity: 0.25;
+    animation: floatParticle 6s ease-in-out infinite alternate;
+}
+
+@keyframes floatParticle {
+    0% {
+        transform: translateY(0) rotate(0deg) scale(1);
+    }
+    50% {
+        transform: translateY(-15px) rotate(10deg) scale(1.1);
+    }
+    100% {
+        transform: translateY(5px) rotate(-10deg) scale(0.95);
+    }
+}
+
+/* Wrapper del Carrusel y Controles */
+.occasion-carousel-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    width: 100%;
+    margin-top: 2rem;
+    z-index: 10;
+}
+
+.occasion-carousel {
+    display: flex;
+    gap: 2rem;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+    width: 100%;
+    padding: 1.5rem 0.5rem;
+}
+
+.occasion-carousel::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+}
+
+/* Dimensionamiento responsivo de las tarjetas dentro del carrusel */
+.occasion-carousel .product-card {
+    flex: 0 0 calc(33.333% - 1.333rem);
+    transition: var(--transition);
+}
+
+.occasion-carousel .product-card:hover {
+    transform: translateY(-8px);
+}
+
+/* Botones de Flechas del Carrusel */
+.occ-arrow {
+    flex-shrink: 0;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    background: white;
+    color: var(--primary);
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    z-index: 12;
+}
+
+.occ-arrow:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+    transform: scale(1.08);
+    box-shadow: 0 6px 20px rgba(192, 57, 43, 0.25);
+}
+
+.occ-arrow:disabled {
+    opacity: 0;
+    pointer-events: none;
+    cursor: default;
+}
+
+/* Adaptabilidad Responsiva */
+@media (max-width: 992px) {
+    .occasion-carousel .product-card {
+        flex: 0 0 calc(50% - 1rem); /* 2 tarjetas en tablets */
+    }
+    
+    .occasion-title {
+        font-size: 2.2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .occasion-carousel-wrap {
+        gap: 0.5rem;
+    }
+    
+    .occasion-carousel {
+        gap: 1.2rem;
+        padding-left: 0;
+        padding-right: 0;
+    }
+    
+    .occasion-carousel .product-card {
+        flex: 0 0 85vw; /* En móvil dejamos una sola tarjeta casi completa y permitimos scroll touch nativo */
+        margin-right: 0.5rem;
+    }
+
+    .occ-arrow {
+        display: none; /* En móviles ocultamos las flechas ya que el scroll táctil es súper intuitivo */
+    }
+    
+    .occasion-title {
+        font-size: 1.8rem;
+    }
+    
+    .occasion-subtitle {
+        font-size: 1rem;
+    }
 }
