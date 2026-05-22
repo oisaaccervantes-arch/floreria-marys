@@ -804,6 +804,13 @@ a {
     font-size: 0.9rem;
     color: rgba(255, 255, 255, 0.6);
 }
+@media (max-width: 767px) {
+  .footer-bottom {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    text-align: center;
+  }
+}
 
 
 /* Floating WA Btn */
