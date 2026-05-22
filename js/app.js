@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // NOTA SOBRE MESES EN JAVASCRIPT: Los meses van de 0 a 11 (0 = Enero, 1 = Febrero, 2 = Marzo, etc.)
     // - Para simular 13 de Febrero (San Valentín), usamos el mes index 1 -> new Date(2026, 1, 13)
     // - Para simular 13 de Marzo (Flores Amarillas), usamos el mes index 2 -> new Date(2026, 2, 13)
-    let testDateOverride = new Date(2026, 1, 22); // 13 de Febrero de 2026 (Muestra San Valentín)
+    let testDateOverride = new Date(2026, 4, 22); // 13 de Febrero de 2026 (Muestra San Valentín)
 
     window.simularFecha = function (fechaStr) {
         testDateOverride = fechaStr ? new Date(fechaStr) : null;
